@@ -31,7 +31,7 @@
 <script>
     //Variáveis globais do Jogo
     var canvas, ctx, ALTURA, LARGURA, frames = 0, maxPulos = 3, velocidade = 6,
-    estadoAtual,
+    estadoAtual, record,
 
     estados = {
         jogar: 0,
@@ -84,6 +84,12 @@
         reset: function () {
             this.velocidade = 0;
             this.y = 0;
+
+            if (this.score > record){
+                localStorage.setItem("record", this.score);
+                record = this.score;
+            }
+
             this.score = 0;
         },
 
@@ -194,6 +200,11 @@
         document.addEventListener("mousedown", clique);
 
         estadoAtual = estados.jogar;
+        record = localStorage.getItem("record");
+
+        if (record == null)
+                record = 0;
+
         roda();
 
     }
@@ -234,6 +245,9 @@
             ctx.translate(LARGURA / 2, ALTURA / 2);
             ctx.fillStyle = "#fff";
 
+            if (bloco.score > record)
+                    ctx.fillText("Novo Record!", -150, -65);
+
             if (bloco.score < 10)
                 ctx.fillText(bloco.score, -13, 19);
 
@@ -241,7 +255,7 @@
                 ctx.fillText(bloco.score, -26, 19);
 
             else
-                ctx.fillText(bloco.score, -39, 19);
+                ctx.fillText(bloco.score, -39, 1e9);
 
             ctx.restore();
         }
